@@ -1,0 +1,12 @@
+{
+  "name": "arduino-status",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./index.js"
+  },
+  "dependencies": {
+    "express": "~4.16.0",
+    "socket.io": "^2.1.1"
+  }
+}
