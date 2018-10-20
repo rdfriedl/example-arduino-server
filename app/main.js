@@ -1,3 +1,5 @@
+vueMoment.install(Vue);
+
 const socket = io.connect(location.protocol + '//' + location.host);
 
 const app = new Vue({
@@ -7,14 +9,38 @@ const app = new Vue({
 		showRaw: {}
 	},
 	methods: {
-		formatJson(data){
-			return JSON.stringify(data, null, 2);
+		getCardStatusMessage(data){
+			if(data.inspectionNeeded){
+				return "Inspection Needed";
+			}
+			else if(data.inspectionInProgress){
+				return "Inspection In Progress";
+			}
+			else {
+				return "No Inspection Needed";
+			}
 		},
-		highlight(string){
-			return Prism.highlight(string, Prism.languages.json);
+		getCardStatus(data){
+			if(data.inspectionNeeded){
+				return "bg-danger";
+			}
+			else if(data.inspectionInProgress){
+				return "bg-warning";
+			}
+			else {
+				return "bg-success";
+			}
 		},
-		toggleShowRaw(id){
-			return this.$set(this.showRaw, id, !this.showRaw[id]);
+		getCardLastChangedMessage(data){
+			if(data.inspectionNeeded){
+				return "Time Requested";
+			}
+			else if(data.inspectionInProgress){
+				return "Time Started";
+			}
+			else {
+				return "Last Inspection";
+			}
 		}
 	}
 });
