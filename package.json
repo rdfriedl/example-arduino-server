@@ -3,11 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node ./index.js"
+    "start": "node ./server/index.js",
+    "dev": "nodemon -w server ./server/index.js"
   },
   "dependencies": {
+    "diskdb": "^0.1.17",
     "express": "~4.16.0",
     "serve-index": "^1.9.1",
     "socket.io": "^2.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
   }
 }

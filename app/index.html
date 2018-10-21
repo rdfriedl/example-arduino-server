@@ -14,30 +14,91 @@
 	<script src="https://unpkg.com/moment@2.22.2/min/moment.min.js"></script>
 	<script src="https://unpkg.com/vue-moment@4.0.0/dist/vue-moment.min.js"></script>
 	<link rel="stylesheet" href="./styles.css">
+
+	<link rel="manifest" href="manifest.webmanifest">
 </head>
 <body class="bg-dark p-3">
 <div id="app">
-	<div class="mb-3">
-		<img class="img-fluid" src="./res/cpi-radant-technologies-logo.jpg" alt="CPI Radant Technologies">
-
-		<a href="/logs" target="_blank" class="btn btn-lg btn-outline-primary">Logs</a>
+	<div class="mb-3 align-items-center d-flex justify-content-between">
+		<div class="logos">
+			<img src="images/cpi-radant-technologies-logo.jpg" alt="CPI Radant Technologies">
+			<img src="images/umass-lowell-logo.png" alt="UMass Lowell">
+		</div>
+		<h1 class="text-white current-time" v-if="dashboard">{{currentTime | moment("h:mm:ss A")}}</h1>
+		<div v-show="!dashboard">
+			<button class="btn btn-outline-primary" @click.stop="toggleDashboard()">Dashboard Mode</button>
+			<a href="/logs" class="btn btn-outline-success">Logs</a>
+		</div>
 	</div>
 	<div class="card-grid">
-		<div class="card text-white" v-for="arduino in arduinos" :class="getCardStatus(arduino)">
+		<div class="card text-white" v-for="switchData in switches" :class="getCardStatus(switchData)">
 			<div class="card-header d-flex justify-content-between align-items-center">
-				{{getCardStatusMessage(arduino)}}
-				<button type="button" class="btn btn-outline-light btn-sm">History</button>
+				{{getCardStatusMessage(switchData)}}
+				<button
+					class="btn btn-outline-light btn-sm"
+					type="button"
+					v-show="!dashboard"
+					@click="openSwitchHistory(switchData.id)"
+				>
+					History
+				</button>
 			</div>
 			<div class="align-items-center card-body d-flex justify-content-center py-4">
-				<h2 class="m-0 my-4 text-center">{{arduino.name}}</h2>
+				<h2 class="m-0 my-4 text-center">{{switchData.name}}</h2>
 			</div>
 			<div class="card-footer">
-				{{getCardLastChangedMessage(arduino)}}: {{arduino.lastChanged | moment("h:mm A")}}
+				{{getCardLastChangedMessage(switchData)}}: {{switchData.lastStateChange | moment("h:mm A")}}
 			</div>
 		</div>
 	</div>
 
-	<a href="/logs" target="_blank" class="btn btn-lg btn-outline-primary mr-a">Logs</a>
+	<div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="historyModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="historyModalLabel">History</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<!--<form @submit.prevent="getHistory()">-->
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text">Switch</span>
+							</div>
+							<select class="form-control" v-model="historySelectedSwitch">
+								<option v-for="switchData in switches" :value="switchData.id">{{switchData.name}}</option>
+							</select>
+						</div>
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text">Date</span>
+							</div>
+							<input type="date" class="form-control" v-model="historyDate"/>
+							<!--<div class="input-group-append">-->
+								<!--<button class="btn btn-outline-secondary" type="submit">Search</button>-->
+							<!--</div>-->
+						</div>
+					<!--</form>-->
+					<table class="table table-dark">
+						<thead>
+						<tr>
+							<th scope="col">Time</th>
+							<th scope="col">State</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td>Otto</td>
+							<td>@mdo</td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script src="main.js"></script>
