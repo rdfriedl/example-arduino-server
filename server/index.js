@@ -16,6 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // serve the app
 app.use('/', express.static(path.join(process.cwd(), 'app')));
+app.use('/node_modules/', express.static(path.join(process.cwd(), 'node_modules')));
 
 // server the log files
 app.use('/logs', express.static(path.join(process.cwd(), logs.logsFolder), {
