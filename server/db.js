@@ -1,14 +1,12 @@
 const fs = require('fs');
-const path = require('path');
 const diskdb = require('diskdb');
-
-let dbPath = process.env.DB_PATH || path.resolve(process.cwd(), 'data');
+const { DB_PATH } = require('./config.js');
 
 // create data dir if it dose not exist
-if(!fs.existsSync(dbPath)){
-	fs.mkdirSync(dbPath);
+if(!fs.existsSync(DB_PATH)){
+	fs.mkdirSync(DB_PATH);
 }
 
-const db = diskdb.connect(dbPath, ['switches']);
+const db = diskdb.connect(DB_PATH, ['switches']);
 
 module.exports = db;

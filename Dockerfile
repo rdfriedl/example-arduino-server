@@ -12,7 +12,7 @@ COPY server server
 
 VOLUME ./logs
 
-ENV NODE_PORT=80
+ENV PORT=80
 ENV LOG_PATH="/logs"
 EXPOSE 80
 
