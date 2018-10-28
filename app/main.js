@@ -15,6 +15,8 @@ const app = new Vue({
 		},
 		getCardStatusMessage(data){
 			switch (data.state) {
+				case "offline":
+					return "Offline";
 				case "inspection-needed":
 					return "Inspection Needed";
 				case "inspection-in-progress":
@@ -25,6 +27,8 @@ const app = new Vue({
 		},
 		getCardStatus(data){
 			switch (data.state) {
+				case "offline":
+					return "bg-secondary";
 				case "inspection-needed":
 					return "bg-danger";
 				case "inspection-in-progress":
@@ -35,6 +39,8 @@ const app = new Vue({
 		},
 		getCardLastChangedMessage(data){
 			switch (data.state) {
+				case "offline":
+					return "Lost Connection";
 				case "inspection-needed":
 					return "Time Requested";
 				case "inspection-in-progress":

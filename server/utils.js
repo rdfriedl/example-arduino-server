@@ -1,6 +1,8 @@
+const moment = require('moment');
+
 // utility method that returns the current date
 function now(){
-	return new Date();
+	return moment();
 }
 
 module.exports = {

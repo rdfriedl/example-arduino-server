@@ -1,19 +1,26 @@
-const db = require('./db');
-const logs = require('./logs');
-// const moment = require('moment');
-const { now } = require('./utils');
+const db = require("./db");
+const logs = require("./logs");
+const moment = require("moment");
+const { now } = require("./utils");
+
+const { MARK_OFFLINE_AFTER, REMOVE_AFTER } = require('./config.js');
 
 // creates an arbitrary state string by looking at the switch data
 function getSwitchState(switchData) {
+	let beforeDate = moment().subtract(MARK_OFFLINE_AFTER);
+
+	if(switchData.lastUpdate && moment(switchData.lastUpdate).isBefore(beforeDate)){
+		return "offline";
+	}
+
 	if(switchData.inspectionNeeded){
 		return "inspection-needed";
 	}
-	else if(switchData.inspectionInProgress){
+	if(switchData.inspectionInProgress){
 		return "inspection-in-progress";
 	}
-	else {
-		return "no-inspection-needed";
-	}
+
+	return "no-inspection-needed";
 }
 
 function getSwitches() {
@@ -43,39 +50,56 @@ function updateSwitch(id, data){
 	if(!id) return;
 
 	// get or create the switch
-	let switchData = getOrCreateSwitch(id);
+	getOrCreateSwitch(id);
 
 	// create a new switch using the data
 	let update = Object.assign({}, data);
-	// calculate the new state of the switch
-	update.state = getSwitchState(data);
 	update.lastUpdate = now();
-
-	if(update.state !== switchData.state){
-		// if the state has changed, set the "lastStateChange" property to the current time
-		update.lastStateChange = now();
-
-		// log switch change
-		console.log('[', now(), ']', update.id, 'Changed to:', update.state);
-		logs.logSwitch(update);
-	}
 
 	// write the new switch data to the switches.json file
 	db.switches.update({ id }, update);
+
+	return updateSwitchState(id);
 }
 
-// // remove offline switches
-// function updateOfflineSwitches(){
-// 	let switches = this.getSwitches();
-//
-// 	switches.forEach(switchData => {
-// 		if(switchData.lastUpdate)
-// 	})
-// }
+// update a switches state and remove it if it has not updated is a set amount of time
+function updateSwitchState(id){
+	let switchData = getOrCreateSwitch(id);
+	let didChange = false;
+
+	let newState = getSwitchState(switchData);
+
+	if(newState !== switchData.state){
+		// if the state has changed, set the "lastStateChange" property to the current time
+		let lastStateChange = now();
+
+		// write the new switch data to the switches.json file
+		db.switches.update({ id }, {
+			state: newState,
+			lastStateChange
+		});
+
+		logs.logSwitch(getSwitch(id));
+		didChange = true;
+	}
+
+	// remove the switch if it has not updated with in the set time
+	let beforeDate = moment().subtract(REMOVE_AFTER);
+	if(switchData.lastUpdate && moment(switchData.lastUpdate).isBefore(beforeDate)){
+		db.switches.remove({id});
+
+		let message = [now(), id, 'removed'].join(',');
+		logs.log(message);
+		didChange = true;
+	}
+
+	return didChange;
+}
 
 module.exports = {
 	getSwitchState,
 	getSwitch,
 	getSwitches,
-	updateSwitch
+	updateSwitch,
+	updateSwitchState
 };
