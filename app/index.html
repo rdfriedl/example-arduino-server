@@ -38,8 +38,11 @@
 			<div class="align-items-center card-body d-flex justify-content-center py-4">
 				<h2 class="m-0 my-4 text-center">{{switchData.name}}</h2>
 			</div>
-			<div class="card-footer">
+			<div class="card-footer" v-if="switchData.lastStateChange">
 				{{getCardLastChangedMessage(switchData)}}: {{switchData.lastStateChange | moment("h:mm A")}}
+			</div>
+			<div class="card-footer" v-if="!switchData.lastStateChange && switchData.firstUpdate">
+				Discovered: {{switchData.firstUpdate | moment("h:mm A")}}
 			</div>
 		</div>
 	</div>

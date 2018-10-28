@@ -32,10 +32,10 @@ router.post("/status", (req, res) => {
 		}
 
 		// and the response and send a message back
-		res.status(200).end("received\n");
+		res.json(switches.getSwitch(switchId));
 	}
 	else {
-		res.status(400).end("no id provided\n");
+		res.status(400).end("no id provided");
 	}
 });
 

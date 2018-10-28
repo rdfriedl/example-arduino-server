@@ -3,7 +3,7 @@ const logs = require("./logs");
 const moment = require("moment");
 const { now } = require("./utils");
 
-const { MARK_OFFLINE_AFTER, REMOVE_AFTER } = require('./config.js');
+const { MARK_OFFLINE_AFTER, REMOVE_AFTER } = require("./config.js");
 
 // creates an arbitrary state string by looking at the switch data
 function getSwitchState(switchData) {
@@ -69,7 +69,20 @@ function updateSwitchState(id){
 
 	let newState = getSwitchState(switchData);
 
-	if(newState !== switchData.state){
+	if(newState && !switchData.state){
+		// write the new switch data to the switches.json file
+		db.switches.update({ id }, {
+			state: newState,
+			lastStateChange: null,
+			firstUpdate: now()
+		});
+
+		let message = [now(), id, "online"].join(",");
+		logs.log(message);
+
+		didChange = true;
+	}
+	else if(newState !== switchData.state){
 		// if the state has changed, set the "lastStateChange" property to the current time
 		let lastStateChange = now();
 
@@ -88,7 +101,7 @@ function updateSwitchState(id){
 	if(switchData.lastUpdate && moment(switchData.lastUpdate).isBefore(beforeDate)){
 		db.switches.remove({id});
 
-		let message = [now(), id, 'removed'].join(',');
+		let message = [now(), id, "removed"].join(",");
 		logs.log(message);
 		didChange = true;
 	}
