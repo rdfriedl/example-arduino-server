@@ -13,22 +13,11 @@ router.get('/logs/:id', (req, res) => {
 });
 
 router.get('/switches', (req, res) => {
-	res.json(switches.getSwitches())
+	res.json(switches.getSwitches());
 });
 
 router.get('/switches/:id', (req, res) => {
 	let switchData = switches.getSwitch(req.params.id);
-
-	if(!switchData){
-		res.status(404).end();
-	}
-	else{
-		res.json(switchData);
-	}
-});
-
-router.get('/switches/:id/history?days', (req, res) => {
-	let switchId = req.params.id
 
 	if(!switchData){
 		res.status(404).end();

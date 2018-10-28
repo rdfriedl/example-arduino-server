@@ -6,25 +6,10 @@ const app = new Vue({
 	el: "#app",
 	data: {
 		switches: [],
-		historyEntries: [],
-		historyModalOpen: false,
-		historyDate: moment().format("YYYY-MM-DD"),
-		historySelectedSwitch: null,
 		currentTime: new Date(),
 		dashboard: false
 	},
-	watch: {
-		historyModalOpen(open) {
-			$("#historyModal").modal(open ? "show" : "hide");
-		}
-	},
 	methods: {
-		openSwitchHistory(switchId){
-			this.historyEntries = [];
-			this.historySelectedSwitch = switchId;
-			this.historyModalOpen = true;
-			this.getSwitchHistory();
-		},
 		toggleDashboard(){
 			this.dashboard = !this.dashboard;
 		},
@@ -57,16 +42,9 @@ const app = new Vue({
 				case "no-inspection-needed":
 					return "Last Inspection";
 			}
-		},
-		getSwitchHistory(){
-
 		}
 	}
 });
-
-$('#historyModal').on('hidden.bs.modal', (e) => {
-	app.historyModalOpen = false;
-})
 
 socket.on("switches", switches => {
 	app.switches = switches;
