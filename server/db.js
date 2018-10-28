@@ -4,7 +4,7 @@ const diskdb = require('diskdb');
 
 let dbPath = process.env.DB_PATH || path.resolve(process.cwd(), 'data');
 
-// create log dir
+// create data dir if it dose not exist
 if(!fs.existsSync(dbPath)){
 	fs.mkdirSync(dbPath);
 }

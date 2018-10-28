@@ -1,16 +1,7 @@
 const express = require('express');
 const switches = require('./switches');
-const logs = require('./logs');
 
 const router = new express.Router();
-
-router.get('/logs', (req, res) => {
-	res.json(logs.getLogFiles());
-});
-
-router.get('/logs/:id', (req, res) => {
-	res.json(logs.getParsedLog(req.params.id));
-});
 
 router.get('/switches', (req, res) => {
 	res.json(switches.getSwitches());
