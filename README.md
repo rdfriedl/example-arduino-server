@@ -12,18 +12,19 @@
 
 ## Running the server
 
-To run the server, run the command `npm start` in the directory. 
+To run the server, run the command `npm start` in the directory.
 
 It should start a local server at [localhost:8000](http://localhost:8000)
 
-## Posting the arduino status
+## Posting the switch status
 
 Once the server is running send a http POST request to `/status` or (`<server-ip>:8000/status`) with the `Content-Type: application/json` header and some JSON as the body
 ```
 {
-  "id": "arduino-1",
-  "status": "awake",
-  "active": true
+  "id": "switch-1",
+  "name": "Test Switch",
+  "inspectionNeeded": false,
+  "inspectionInProgress": false
 }
 ```
 The only requirement is that the JSON has to have the `id` property.
