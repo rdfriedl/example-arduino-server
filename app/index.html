@@ -19,7 +19,7 @@
 </head>
 <body class="bg-dark p-3">
 <div id="app">
-	<div class="mb-3 align-items-center d-flex justify-content-between">
+	<div class="mb-3 align-items-start d-flex justify-content-between">
 		<div class="logos">
 			<img src="images/cpi-radant-technologies-logo.jpg" alt="CPI Radant Technologies">
 			<img src="images/umass-lowell-logo.png" alt="UMass Lowell">
@@ -28,6 +28,7 @@
 		<div v-show="!dashboard">
 			<button class="btn btn-outline-primary" @click.stop="toggleDashboard()">Dashboard Mode</button>
 			<a href="/logs" class="btn btn-outline-success">Logs</a>
+			<button class="btn btn-outline-info" data-toggle="modal" data-target="#aboutModal">About</button>
 		</div>
 	</div>
 	<div class="card-grid">
@@ -43,6 +44,29 @@
 			</div>
 			<div class="card-footer" v-if="!switchData.lastStateChange && switchData.firstUpdate">
 				Discovered: {{switchData.firstUpdate | moment("h:mm A")}}
+			</div>
+		</div>
+	</div>
+
+	<!-- About Modal -->
+	<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h3>Kolorus Remote Notification System</h3>
+					<hr>
+
+					<h4 class="text-center font-italic">Designed By:</h4>
+
+					<p class="text-center">
+						<span>Brendan Lynch</span><br>
+						<span>James DeLalla</span><br>
+						<span>Sanjay Kadariya</span><br>
+						<span>Ryan Flynn</span><br>
+					</p>
+
+					<p class="text-center mb-0 font-italic">with a special thanks to Robert Friedl for his expert advice.</p>
+				</div>
 			</div>
 		</div>
 	</div>
